@@ -14,15 +14,16 @@ public class AgarioPlayer {
 				}
 			};
 			
-	static final Callable<Void> playCallback =
+	static final Callable<Void> updateCallback =
 			new Callable<Void>() {
 				public Void call() {
-					play();
+					gui.update(data);
 					return null;
 				}
 			};
 			
 	static AgarioData data = new AgarioData();
+	static AgarioGui gui = new AgarioGui();
 
 	public static void main(String[] args) {
 		connect();
@@ -30,14 +31,10 @@ public class AgarioPlayer {
 	
 	public static void connect() {
 		try {
-			AgarioServer server = new AgarioServer(AgarioServer.China);
-			AgarioConnection conn = new AgarioConnection(server, data, reconnectCallback, playCallback);
+			AgarioServer server = new AgarioServer(AgarioServer.Turkey);
+			AgarioConnection conn = new AgarioConnection(server, data, reconnectCallback, updateCallback);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-	
-	public static void play() {
-		//AgarioGui gui = new AgarioGui();
 	}
 }
