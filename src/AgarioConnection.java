@@ -154,18 +154,22 @@ public class AgarioConnection {
     	}
     	boolean Ra = false;*/
     	
-    	short count = buf.getShort();
-    	for (int i = 0; i < count; ++i) {
-    		int w = buf.getInt();
-    		int l = buf.getInt();
+    	// Remove cells that get eaten
+    	short count1 = buf.getShort();
+    	for (int i = 0; i < count1; ++i) {
+    		int cellId = buf.getInt();
+    		int foodId = buf.getInt();
+    		AgarioData.Cell cell = data.getCell(cellId);
+    		AgarioData.Cell food = data.getCell(foodId);
+    		if (cell != null && food != null)
+    			data.removeCell(food);
     	}
     	
-    	int f = 0;
+    	// Update cells
     	while (true) {
     		int id = buf.getInt();
     		if (id == 0)
     			break;
-    		++f;
     		int x = buf.getInt();
     		int y = buf.getInt();
     		short size = buf.getShort();
@@ -196,6 +200,16 @@ public class AgarioConnection {
     			cell.size = size;
     		}
     	}
+    	
+    	// Remove cells that leave the view
+    	int count2 = buf.getInt();
+    	for (int i = 0; i < count2; ++i) {
+    		int id = buf.getInt();
+    		AgarioData.Cell cell = data.getCell(id);
+    		if (cell != null)
+    			data.removeCell(cell);
+    	}
+    	
     	try {
 			onUpdateCallback.call();
 		} catch (Exception e) {

@@ -80,4 +80,14 @@ public class AgarioData {
 			players.put(id, cell);
 		return cell;
 	}
+	
+	public void removeCell(Cell cell) {
+		if (cell.isFood)
+			food.remove(cell.id);
+		else if (cell.isMine)
+			mines.remove(cell.id);
+		else
+			players.remove(cell.id);
+		cells.remove(cell.id);
+	}
 }

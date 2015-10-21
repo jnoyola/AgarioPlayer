@@ -38,8 +38,8 @@ public class AgarioGui extends JPanel {
 		g2d.clearRect(0, 0, getWidth(), getHeight());
 		
 		for (AgarioData.Cell cell : data.getCells()) {
-			g2d.setColor(cell.isFood ? Color.BLACK : cell.color);
-			g2d.fillOval(width/2 + cell.x/4, height/2 + cell.y/4, cell.size, cell.size);
+			g2d.setColor(cell.color);
+			g2d.fillOval(width/2 + cell.x/2 - cell.size/2, height/2 + cell.y/2 - cell.size/2, cell.size, cell.size);
 		}
 		//data.clearCells();
 	}
