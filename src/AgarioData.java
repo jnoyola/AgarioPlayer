@@ -7,6 +7,9 @@ public class AgarioData {
 
 	private User[] leaderboard = new User[10];
 	private HashMap<Integer, Cell> cells = new HashMap<Integer, Cell>();
+	private HashMap<Integer, Cell> players = new HashMap<Integer, Cell>();
+	private HashMap<Integer, Cell> food = new HashMap<Integer, Cell>();
+	private HashMap<Integer, Cell> mines = new HashMap<Integer, Cell>();
 	
 	public class User {
 		public int id;
@@ -24,13 +27,17 @@ public class AgarioData {
 		public short size;
 		public Color color;
 		public String name;
-		public Cell(int id, int x, int y, short size, Color color, String name) {
+		public boolean isFood;
+		public boolean isMine;
+		public Cell(int id, int x, int y, short size, Color color, String name, boolean isFood, boolean isMine) {
 			this.id = id;
 			this.x = x;
 			this.y = y;
 			this.size = size;
 			this.color = color;
 			this.name = name;
+			this.isFood = isFood;
+			this.isMine = isMine;
 		}
 	}
 	
@@ -62,9 +69,15 @@ public class AgarioData {
 		cells.clear();
 	}
 	
-	public Cell addCell(int id, int x, int y, short size, Color color, String name) {
-		Cell cell = new Cell(id, x, y, size, color, name);
+	public Cell addCell(int id, int x, int y, short size, Color color, String name, boolean isFood, boolean isMine) {
+		Cell cell = new Cell(id, x, y, size, color, name, isFood, isMine);
 		cells.put(id, cell);
+		if (isFood)
+			food.put(id, cell);
+		else if (isMine)
+			mines.put(id, cell);
+		else
+			players.put(id, cell);
 		return cell;
 	}
 }

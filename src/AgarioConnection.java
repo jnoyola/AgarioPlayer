@@ -7,7 +7,6 @@ import java.util.concurrent.Callable;
 import javax.xml.bind.DatatypeConverter;
 
 import org.eclipse.jetty.websocket.api.Session;
-import org.eclipse.jetty.websocket.api.StatusCode;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
@@ -156,7 +155,6 @@ public class AgarioConnection {
     	boolean Ra = false;*/
     	
     	short count = buf.getShort();
-    	System.out.println("n: " + count);
     	for (int i = 0; i < count; ++i) {
     		int w = buf.getInt();
     		int l = buf.getInt();
@@ -175,21 +173,23 @@ public class AgarioConnection {
     		short g = unsign(buf.get());
     		short b = unsign(buf.get());
     		Color color = new Color(r, g, b);
-    		// isFood = (S & 1) != 0
     		
-    		byte S = buf.get();
-    		if ((S & 2) != 0) {
+    		byte signal = buf.get();
+    		boolean isMine = (signal & 1) != 0;
+    		boolean isFood = size < 30;
+    		
+    		if ((signal & 2) != 0) {
     			int offset = buf.getInt();
     			buf.position(buf.position() + offset);
     		}
-    		if ((S & 4) != 0) {
+    		if ((signal & 4) != 0) {
     			System.out.println(parseUtf8(buf));
     		}
     		
     		String name = parseUtf16(buf);
     		AgarioData.Cell cell = data.getCell(id);
     		if (cell == null) {
-    			cell = data.addCell(id, x, y, size, color, name);
+    			cell = data.addCell(id, x, y, size, color, name, isFood, isMine);
     		} else {
     			cell.x = x;
     			cell.y = y;
